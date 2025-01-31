@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "https://www.botski.club",
-  "readmore": "https://github.com/kentoverse/Prep-App3/blob/main/README.md",
+  "readmore": "https://github.com/kentoverse/chatbot-app3",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
