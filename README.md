@@ -124,32 +124,33 @@ This **Agile-Driven AI Application** seamlessly integrates **Spring Boot, React,
 
 
 
+# E2E Integration Architecture for RAG Project
 
-<div align="center">
-  <img src="https://storage.googleapis.com/hume-public-logos/hume/hume-banner.png">
-  <h1>EVI Next.js App Router Example</h1>
-</div>
+## Integration Architecture Table
 
-![preview.png](preview.png)
+| **Integration System**      | **AWS Product**                         | **GCP Product**                              | **Role of Developer**                                       |
+|----------------------------|---------------------------------|---------------------------------|------------------------------------------------|
+| **Event-Driven Messaging** | Amazon MSK (Kafka), SQS, SNS   | Pub/Sub, Cloud Tasks            | Configure event-driven pipelines, optimize message queues, ensure scalability |
+| **AI Integration (RAG)**   | Amazon Bedrock, OpenSearch     | Vertex AI, ElasticSearch, Pinecone | Develop RAG pipeline, integrate vector search, fine-tune retrieval |
+| **Frontend Development**   | Amplify, AppSync (GraphQL)     | Firebase, Cloud Functions       | Build UI, integrate GraphQL APIs, optimize AI-driven UX |
+| **Workflow Automation**    | Step Functions, AWS Lambda     | Workflows, Cloud Run            | Define AI-driven workflows, automate approvals, integrate AI decisions |
+| **Cloud-Native Deployment** | EKS (Kubernetes), Lambda, IAM  | GKE, Cloud Run, IAM              | Deploy microservices, ensure scalability, optimize CI/CD |
 
-## Overview
+## Challenges & Solutions
 
-This project features a sample implementation of Hume's [Empathic Voice Interface](https://hume.docs.buildwithfern.com/docs/empathic-voice-interface-evi/overview) using Hume's React SDK. Here, we have a simple EVI that uses the Next.js App Router.
+| **Challenge**                                | **Solution**                             |
+|---------------------------------------------|----------------------------------------|
+| **Scalability for AI queries**              | Use **autoscaling** with Kubernetes (EKS/GKE) and serverless functions (AWS Lambda, Cloud Run). |
+| **High latency in vector search**           | Optimize embeddings retrieval with **Pinecone/ElasticSearch caching**. |
+| **Security concerns with AI-generated data** | Implement **OAuth2 (Azure AD)**, role-based access (RBAC), and encryption (AES-256, TLS). |
+| **Complex workflow automation**             | Leverage **Camunda BPM + AI decision-making** for intelligent approvals. |
+| **Integration of AI with existing tools**   | Utilize **GraphQL APIs** for seamless frontend-backend connectivity. |
 
-## Project deployment
+This architecture ensures a **scalable, event-driven, AI-powered system** with cloud-native deployments on AWS & GCP, integrating **Kafka, AI RAG, Camunda BPM, and Kubernetes** to power an **automated, intelligent workflow.** 🚀
 
-Click the button below to deploy this example project with Vercel:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fhumeai%2Fhume-evi-next-js-starter&env=HUME_API_KEY,HUME_SECRET_KEY)
 
-Below are the steps to completing deployment:
 
-1. Create a Git Repository for your project.
-2. Provide the required environment variables. To get your API key and Client Secret key, log into the portal and visit the [API keys page](https://beta.hume.ai/settings/keys).
-
-## Support
-
-If you have questions, require assistance, or wish to engage in discussions pertaining to this starter template, [please reach out to us on Discord](https://link.hume.ai/discord).
 
 
 
@@ -383,6 +384,35 @@ See the prompt below that works as an inline edit, just make sure you highlight 
 
 
 <p style="text-align: right;"><a href="#table-of-contents">^ Back to Contents ^</a></p>
+
+
+
+
+<div align="center">
+  <img src="https://storage.googleapis.com/hume-public-logos/hume/hume-banner.png">
+  <h1>EVI Next.js App Router Example</h1>
+</div>
+
+![preview.png](preview.png)
+
+## Overview
+
+This project features a sample implementation of Hume's [Empathic Voice Interface](https://hume.docs.buildwithfern.com/docs/empathic-voice-interface-evi/overview) using Hume's React SDK. Here, we have a simple EVI that uses the Next.js App Router.
+
+## Project Deployment
+
+Click the button below to deploy this example project with Vercel:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fhumeai%2Fhume-evi-next-js-starter&env=HUME_API_KEY,HUME_SECRET_KEY)
+
+Below are the steps to completing deployment:
+
+1. Create a Git Repository for your project.
+2. Provide the required environment variables. To get your API key and Client Secret key, log into the portal and visit the [API keys page](https://beta.hume.ai/settings/keys).
+
+## Support
+
+If you have questions, require assistance, or wish to engage in discussions pertaining to this starter template, [please reach out to us on Discord](https://link.hume.ai/discord).
 
 
 
