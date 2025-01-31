@@ -25,7 +25,7 @@ export const Nav = () => {
     <div className="px-4 py-2 flex items-center h-16 md:h-20 lg:h-24 z-50 bg-card border-b border-border">
       <div className="flex items-center gap-2">
         <ThemeSwitcher /> {/* Render the dynamic logo */}
-        <span className="text-lg font-semibold">DIGITAL WORKS</span>
+        <span className="text-md font-light">BOT DIGITAL WORKS</span>
       </div>
       <div className="ml-auto flex items-center gap-1">
         <Button
