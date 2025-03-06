@@ -1,3 +1,180 @@
+---
+title: "GCP Chatbot Infrastructure - Terraform"
+---
+
+# GCP Chatbot Infrastructure - Terraform
+
+## Overview
+This Terraform configuration provisions a **Chatbot Development Environment** in **Google Cloud Platform (GCP)** using Cloud Native services.
+
+## Features
+- **Cloud Run**: Deploys a serverless chatbot API.
+- **Cloud SQL (PostgreSQL)**: Stores structured chatbot data.
+- **Firestore**: NoSQL database for flexible chatbot storage.
+- **Cloud Storage**: Stores media assets (images, audio, etc.).
+- **IAM Policies**: Secure role-based access control.
+- **VPC Peering**: Enables private connectivity between Cloud SQL and Cloud Run.
+- **Swagger API Documentation**: Provides an API wrapper for chatbot endpoints.
+
+## Terraform Configuration
+
+### Provider Configuration
+```hcl
+provider "google" {
+  project = var.project_id
+  region  = var.region
+}
+```
+
+### Cloud SQL with Private IP
+```hcl
+resource "google_compute_global_address" "private_ip" {
+  name          = "private-ip"
+  purpose       = "VPC_PEERING"
+  address_type  = "INTERNAL"
+  prefix_length = 16
+  network       = var.vpc_name
+}
+
+resource "google_service_networking_connection" "private_vpc_connection" {
+  network                 = var.vpc_name
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [google_compute_global_address.private_ip.name]
+}
+
+resource "google_sql_database_instance" "chatbot_db" {
+  name             = "chatbot-db-instance"
+  database_version = "POSTGRES_13"
+  region           = var.region
+
+  settings {
+    tier = "db-f1-micro"
+    availability_type = "REGIONAL"
+    ip_configuration {
+      ipv4_enabled    = false
+      private_network = google_service_networking_connection.private_vpc_connection.network
+    }
+  }
+}
+```
+
+### Cloud Run Chatbot API
+```hcl
+resource "google_cloud_run_service" "chatbot_api" {
+  name     = "chatbot-api"
+  location = var.region
+
+  template {
+    spec {
+      containers {
+        image = "gcr.io/${var.project_id}/chatbot-api:latest"
+        ports {
+          container_port = 8080
+        }
+      }
+    }
+  }
+}
+```
+
+### Cloud Storage
+```hcl
+resource "google_storage_bucket" "chatbot_media" {
+  name     = "chatbot-media-${var.project_id}"
+  location = var.region
+  uniform_bucket_level_access = true
+}
+```
+
+### IAM Policies
+```hcl
+resource "google_cloud_run_service_iam_policy" "public_access" {
+  location = google_cloud_run_service.chatbot_api.location
+  service  = google_cloud_run_service.chatbot_api.name
+
+  policy_data = <<EOF
+{
+  "bindings": [
+    {
+      "role": "roles/run.invoker",
+      "members": ["allUsers"]
+    }
+  ]
+}
+EOF
+}
+```
+
+## Backend API with Swagger Documentation
+```javascript
+const express = require("express");
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
+
+const app = express();
+const port = process.env.PORT || 8080;
+
+const swaggerOptions = {
+  swaggerDefinition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Chatbot API",
+      version: "1.0.0",
+      description: "API for Chatbot with GCP",
+    },
+    servers: [
+      {
+        url: "http://localhost:8080",
+      },
+    ],
+  },
+  apis: ["./routes/*.js"],
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+app.get("/", (req, res) => {
+  res.send("Chatbot API Running");
+});
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+```
+
+## Cheat Sheet for Chatbot Infrastructure Interview
+### Terraform Commands
+- `terraform init` - Initialize Terraform
+- `terraform plan` - Preview changes before applying
+- `terraform apply` - Deploy infrastructure
+- `terraform destroy` - Remove infrastructure
+
+### GCP Services Overview
+- **Cloud Run**: Deploy serverless applications
+- **Cloud SQL**: Managed relational databases
+- **Firestore**: NoSQL database for flexible storage
+- **Cloud Storage**: Stores unstructured data
+- **IAM**: Controls access to resources
+
+### Best Practices
+- **Use Secret Manager** to store sensitive credentials
+- **Enable Cloud Logging** for debugging
+- **Set up IAM roles** for least privilege access
+- **Use VPC Peering** for secure database connections
+
+## Next Steps
+- Automate deployments using **GitHub Actions**
+- Integrate **Dialogflow CX** for AI-driven chatbot responses
+- Optimize **Cloud Run autoscaling** for cost efficiency
+
+---
+
+This README serves as a **Terraform cheat sheet** and **interview guide** for GCP Chatbot development. 🚀
+
+
+
+
 # AI-Driven Spring MVC Application
 
 ## Overview
